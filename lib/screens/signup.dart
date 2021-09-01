@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flut/constants.dart';
 import 'package:flutter_flut/screens/signin.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
@@ -105,6 +106,9 @@ class _SignUpState extends State<SignUp> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SvgPicture.asset("assets/svgs/google.svg",
+                              width: 20, height: 20, color: mainColor),
+                          SizedBox(width: 20),
                           Text("Sign up via Google",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -125,7 +129,10 @@ class _SignUpState extends State<SignUp> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Sign up via Gmail",
+                          SvgPicture.asset("assets/svgs/facebook.svg",
+                              width: 20, height: 20, color: mainColor),
+                          SizedBox(width: 20),
+                          Text("Sign up via facebook",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: mainColor,

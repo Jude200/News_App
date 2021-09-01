@@ -42,7 +42,7 @@ class _SignInState extends State<SignIn> {
                 Container(
                   child: Text(
                     "Insert your email and password to sign in",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontFamily: "Mogra"),
                   ),
                 ),
                 SizedBox(height: 20),

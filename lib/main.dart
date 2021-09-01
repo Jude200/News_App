@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flut/screens/signin.dart';
+import 'package:flutter_flut/screens/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
         primarySwatch: Colors.blue,
       ),
-      home: SignIn(),
+      home: Home(),
     );
   }
 }
