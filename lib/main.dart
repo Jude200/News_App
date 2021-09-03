@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flut/screens/home.dart';
+import 'package:flutter_flut/packge/interface.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
         primarySwatch: Colors.blue,
       ),
-      home: Home(),
+      home: EpSmart(),
     );
   }
 }
