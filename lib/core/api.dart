@@ -10,5 +10,10 @@ String makeSearchUrl(String keyWord) {
 }
 
 String makeCategoryUrl(String category) {
-  return '$baseUrl/everything&category=$category$urlApi_Key';
+  category = category.toLowerCase();
+  return '$baseUrl/top-headlines?country=fr&category=$category$urlApi_Key';
+}
+
+String trendingSearch() {
+  return '$baseUrl/top-headlines?country=fr$urlApi_Key';
 }

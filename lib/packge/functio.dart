@@ -20,8 +20,19 @@ List<List<String>> keyValCommon(String _key) {
     _list[0].add(key);
     _list[1].add(value);
   });
-
   print(_list);
+  return _list;
+}
+
+List<List<String>> keyValDistrict(String _key) {
+  List<List<String>> _list = [[], []];
+
+  Map<String, String> commonDepartSelect = district[_key];
+  commonDepartSelect.forEach((key, value) {
+    _list[0].add(key);
+    _list[1].add(value);
+  });
+
   return _list;
 }
 

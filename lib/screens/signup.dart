@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flut/constants.dart';
+import 'package:flutter_flut/models/data_user.dart';
+import 'package:flutter_flut/screens/home.dart';
 import 'package:flutter_flut/screens/signin.dart';
+import 'package:flutter_flut/services/auth_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
@@ -11,7 +15,10 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  bool isView = false;
+  AuthentificationHelper _helper;
+  var isView = false;
+  bool shouldValidate = false;
+  GlobalKey<FormState> _formKey = GlobalKey();
   bool isAgree = false;
   passwordView() {
     setState(() {
@@ -19,8 +26,13 @@ class _SignUpState extends State<SignUp> {
     });
   }
 
+  String _name;
+  String _email;
+  String _password;
+
   @override
   Widget build(BuildContext context) {
+    _helper = AuthentificationHelper(context);
     return Scaffold(
       body: ListView(
         children: [
@@ -36,132 +48,138 @@ class _SignUpState extends State<SignUp> {
                             fontSize: 40,
                             color: mainColor))),
                 Form(
+                    key: _formKey,
                     child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Name",
-                            hintStyle: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Email",
-                            hintStyle: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: TextFormField(
-                        obscureText: isView,
-                        decoration: inputDecoration(isView, "Password"),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: TextFormField(
-                        obscureText: isView,
-                        decoration: inputDecoration(isView, "Repeat password"),
-                      ),
-                    ),
-                    Row(
                       children: [
-                        Checkbox(
-                            activeColor: mainColor,
-                            value: isAgree,
-                            onChanged: (b) {
-                              setState(() {
-                                isAgree = b;
-                              });
-                            }),
-                        Text("I agree to the privacy terms")
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: mainColor,
-                          borderRadius: BorderRadius.circular(05.00)),
-                      child: Text("Sign up",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20)),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      width: double.infinity,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Color(0XFFDDF2EF),
-                        borderRadius: BorderRadius.circular(05.00),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset("assets/svgs/google.svg",
-                              width: 20, height: 20, color: mainColor),
-                          SizedBox(width: 20),
-                          Text("Sign up via Google",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: mainColor,
-                                  fontSize: 20))
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      width: double.infinity,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Color(0XFFDDF2EF),
-                        borderRadius: BorderRadius.circular(05.00),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset("assets/svgs/facebook.svg",
-                              width: 20, height: 20, color: mainColor),
-                          SizedBox(width: 20),
-                          Text("Sign up via facebook",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: mainColor,
-                                  fontSize: 20))
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Already have account ?",
-                            style: TextStyle(color: mainColor)),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SignIn()));
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value.trim().length == 0) {
+                                return "Le nom ne peut etre vide ";
+                              }
+                              return null;
                             },
-                            child: Text("Sign in",
+                            onSaved: (value) => _name = value,
+                            decoration: InputDecoration(
+                                hintText: "Name",
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: TextFormField(
+                            validator: (value) {
+                              if (!GetUtils.isEmail(value)) {
+                                return "Adresse mail non valide";
+                              }
+                              return null;
+                            },
+                            onSaved: (value) => _email = value,
+                            decoration: InputDecoration(
+                                hintText: "Email",
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value.trim().length < 8) {
+                                return "Mot de passe non securisé";
+                              }
+                              return null;
+                            },
+                            onSaved: (value) => _password = value,
+                            obscureText: isView,
+                            decoration: inputDecoration(isView, "Password"),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                                activeColor: mainColor,
+                                value: isAgree,
+                                onChanged: (b) {
+                                  setState(() {
+                                    isAgree = b;
+                                  });
+                                }),
+                            Text("I agree to the privacy terms")
+                          ],
+                        ),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(mainColor),
+                              minimumSize: MaterialStateProperty.all(
+                                  Size(double.infinity, 40)),
+                            ),
+                            onPressed: () async {
+                              bool b =
+                                  _formKey.currentState.validate() ?? false;
+                              setState(() {
+                                shouldValidate = true;
+                              });
+
+                              if (b) {
+                                _formKey.currentState.save();
+
+                                await _helper.registerWithEmailAndPassword(
+                                    _email, _password);
+                              }
+                            },
+                            child: Text("Sign up",
                                 style: TextStyle(
-                                    color: mainColor,
-                                    fontWeight: FontWeight.bold)))
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 20))),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(vertical: 15)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0XFFDDF2EF)),
+                          ),
+                          onPressed: () async {
+                            await _helper.signInWithGoogle();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset("assets/svgs/google.svg",
+                                  width: 20, height: 20, color: mainColor),
+                              SizedBox(width: 20),
+                              Text("Sign up via Google",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: mainColor,
+                                      fontSize: 20))
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Already have account ?",
+                                style: TextStyle(color: mainColor)),
+                            TextButton(
+                                onPressed: () {
+                                  Get.to(() => SignIn());
+                                },
+                                child: Text("Sign in",
+                                    style: TextStyle(
+                                        color: mainColor,
+                                        fontWeight: FontWeight.bold)))
+                          ],
+                        ),
+                        SizedBox(height: 20)
                       ],
-                    ),
-                    SizedBox(height: 20)
-                  ],
-                ))
+                    ))
               ],
             ),
           )

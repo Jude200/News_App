@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Search extends StatefulWidget {
-  const Search({Key key}) : super(key: key);
+class SearchWidget extends StatefulWidget {
+  final String keyWord;
+  const SearchWidget({Key key, @required this.keyWord}) : super(key: key);
 
   @override
-  _SearchState createState() => _SearchState();
+  _SearchWidgetState createState() => _SearchWidgetState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Container(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 8.0),
-        child: TextFormField(
-            decoration: InputDecoration(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-          suffixIcon: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search),
-          ),
-          hintText: "Enter keywords ... ",
-        )),
-      ),
+    return Column(
+      children: [
+        Row(children: [Text(widget.keyWord), Text("More ... ")])
+      ],
     );
   }
 }

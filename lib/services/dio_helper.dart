@@ -12,23 +12,36 @@ class DioHelper {
     Future<Response<Map<String, dynamic>>> _response;
     try {
       _response = _dio.get(_upcomingUrl);
-      print(await _response);
     } on DioError catch (e) {
       print(e.message);
-      throw Exception(e.message);
+      // if (e.message.contains("SocketException")) {
+      //   return null;
+      // }
     }
     return _response;
   }
 
-  Future<Response<Map<String, dynamic>>> searchMovie(String searchKey) async {
+  Future<Response<Map<String, dynamic>>> searchNews(String searchKey) async {
     String _searchUrl = makeSearchUrl(searchKey);
     Future<Response<Map<String, dynamic>>> _response;
     try {
       _response = _dio.get(_searchUrl);
-      print(await _response);
     } on DioError catch (e) {
       print(e.message);
-      throw Exception(e.message);
+      // if (e.message.contains("SocketException")) {
+      //   return null;
+      // }
+    }
+    return _response;
+  }
+
+  Future<Response<Map<String, dynamic>>> searchTrending() async {
+    String _searchUrl = trendingSearch();
+    Future<Response<Map<String, dynamic>>> _response;
+    try {
+      _response = _dio.get(_searchUrl);
+    } on DioError catch (e) {
+      print(e.message);
     }
     return _response;
   }

@@ -1,23 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flut/packge/interface.dart';
+import 'package:flutter_flut/screens/signin.dart';
+import 'package:get/get.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        inputDecorationTheme: InputDecorationTheme(
-            border:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
-        primarySwatch: Colors.blue,
-      ),
-      home: EpSmart(),
-    );
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(GetMaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SignIn(),
+  ));
 }

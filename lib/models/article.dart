@@ -1,4 +1,5 @@
 class Articles {
+  int id;
   Source source;
   String author;
   String title;
@@ -9,7 +10,8 @@ class Articles {
   String content;
 
   Articles(
-      {this.source,
+      {this.id,
+      this.source,
       this.author,
       this.title,
       this.description,
@@ -21,6 +23,17 @@ class Articles {
   Articles.fromJson(Map<String, dynamic> json) {
     source =
         json['source'] != null ? new Source.fromJson(json['source']) : null;
+    author = json['author'];
+    title = json['title'];
+    description = json['description'];
+    url = json['url'];
+    urlToImage = json['urlToImage'];
+    publishedAt = json['publishedAt'];
+    content = json['content'];
+  }
+
+  Articles.fromJsondb(Map<String, dynamic> json) {
+    source = Source(id: null, name: json['source']);
     author = json['author'];
     title = json['title'];
     description = json['description'];
@@ -43,6 +56,20 @@ class Articles {
     data['publishedAt'] = this.publishedAt;
     data['content'] = this.content;
     return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'source': this.source.name,
+      'author': this.author,
+      'title': this.title,
+      'description': this.description,
+      'url': this.url,
+      'urlToImage': this.urlToImage,
+      'publishedAt': this.publishedAt,
+      'content': this.content
+    };
   }
 }
 
